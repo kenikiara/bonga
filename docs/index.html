@@ -4,215 +4,348 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BONGA — Speak. It types. Free voice typing for Windows</title>
-<meta name="description" content="Hold one key and talk. BONGA turns your voice into clean, punctuated text in any app on your Windows laptop. Free, offline, made in Kenya.">
+<meta name="description" content="Hold one key and talk. BONGA turns your voice into clean, punctuated text in any app on your Windows laptop. Free, offline, made in Kenya by Ken Designers.">
 <meta property="og:title" content="BONGA — Usiandike. Bonga.">
 <meta property="og:description" content="Free voice typing for Windows. Hold one key, talk, and clean text lands in WhatsApp, Gmail, Word, anywhere. Works offline. Made in Kenya.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kenikiara.github.io/bonga/">
 <meta property="og:image" content="https://kenikiara.github.io/bonga/og.png">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23177245'/%3E%3Crect x='9' y='6' width='6' height='13' rx='3' fill='%23F6F2E9'/%3E%3Cpath d='M6 14a6 6 0 0 0 12 0' stroke='%23F6F2E9' stroke-width='2.5' fill='none'/%3E%3Cpath d='M12 20v4M8 25h8' stroke='%23F6F2E9' stroke-width='2.5'/%3E%3Ccircle cx='23' cy='10' r='2' fill='%23C63D2F'/%3E%3Ccircle cx='23' cy='16' r='2' fill='%23E9B44C'/%3E%3Ccircle cx='23' cy='22' r='2' fill='%23F6F2E9'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23006fff'/%3E%3Crect x='9' y='6' width='6' height='13' rx='3' fill='%23fff'/%3E%3Cpath d='M6 14a6 6 0 0 0 12 0' stroke='%23fff' stroke-width='2.5' fill='none'/%3E%3Cpath d='M12 20v4M8 25h8' stroke='%23fff' stroke-width='2.5'/%3E%3Ccircle cx='23' cy='10' r='2' fill='%23fbbc00'/%3E%3Ccircle cx='23' cy='16' r='2' fill='%23e8182a'/%3E%3Ccircle cx='23' cy='22' r='2' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,600..800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --sand:#F6F2E9;
-    --paper:#FFFDF7;
-    --ink:#20251E;
-    --ink-soft:#5A6053;
-    --green:#177245;
-    --green-deep:#0F5A35;
-    --red:#C63D2F;
-    --gold:#E9B44C;
-    --line:#E2DCCC;
+    --bg:#030303;
+    --surface:#101010;
+    --surface2:#181818;
+    --line:#262626;
+    --line-soft:#1d1d1d;
+    --text:#f5f5f5;
+    --muted:#9a9a9a;
+    --blue:#006fff;
+    --blue-hi:#3d8bff;
+    --gold:#fbbc00;
+    --violet:#8b83e8;
+    --red:#e8182a;
+    --green:#1a9d5c;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{
-    font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;
-    background:var(--sand);color:var(--ink);
-    font-size:17px;line-height:1.55;
+    font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+    background:var(--bg);color:var(--text);
+    font-size:16.5px;line-height:1.6;
     -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
   }
-  ::selection{background:var(--gold);color:var(--ink)}
-  a{color:var(--green);text-decoration:none}
+  ::selection{background:var(--gold);color:#030303}
+  a{color:var(--blue-hi);text-decoration:none}
   a:hover{text-decoration:underline}
+  h1,h2,h3,.display{font-family:"Bricolage Grotesque","Inter",sans-serif}
   kbd{
     font-family:Consolas,ui-monospace,monospace;font-size:.85em;
-    background:var(--paper);border:1px solid var(--line);border-bottom-width:3px;
-    border-radius:6px;padding:2px 9px;white-space:nowrap;
+    background:var(--surface2);border:1px solid var(--line);border-bottom-width:3px;
+    border-radius:6px;padding:2px 9px;white-space:nowrap;color:var(--text);
   }
-  .wrap{max-width:1080px;margin:0 auto;padding:0 clamp(18px,4vw,40px)}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 clamp(18px,4vw,40px)}
+
+  /* ---------- reveal-on-scroll ---------- */
+  [data-reveal]{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+  [data-reveal].in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){
+    [data-reveal]{opacity:1;transform:none;transition:none}
+    .marquee-track{animation:none !important}
+    .chip-float{animation:none !important}
+  }
 
   /* ---------- nav ---------- */
   nav{
-    position:sticky;top:0;z-index:50;
-    background:color-mix(in srgb,var(--sand) 88%,transparent);
-    backdrop-filter:blur(8px);
-    border-bottom:1px solid var(--line);
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    transition:background .25s ease-out,border-color .25s ease-out;
+    border-bottom:1px solid transparent;
   }
-  .nav-in{display:flex;align-items:center;gap:22px;padding:14px 0}
-  .logo{font-weight:800;font-size:1.35rem;letter-spacing:-.02em;color:var(--ink)}
+  nav.scrolled{background:rgba(3,3,3,.82);backdrop-filter:blur(12px);border-color:var(--line-soft)}
+  .nav-in{display:flex;align-items:center;gap:22px;padding-top:16px;padding-bottom:16px}
+  .logo{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.4rem;letter-spacing:-.02em;color:var(--text)}
   .logo:hover{text-decoration:none}
-  .logo .dot{color:var(--red)}
-  .nav-links{margin-left:auto;display:flex;align-items:center;gap:22px;font-weight:600;font-size:.95rem}
-  .nav-links a{color:var(--ink-soft)}
+  .logo .dot{color:var(--gold)}
+  .logo small{font-family:"Inter";font-size:.62rem;font-weight:600;color:var(--muted);display:block;margin-top:-4px;letter-spacing:.06em}
+  .nav-links{margin-left:auto;display:flex;align-items:center;gap:24px;font-weight:600;font-size:.93rem}
+  .nav-links a{color:var(--muted);transition:color .15s}
+  .nav-links a:hover{color:var(--text);text-decoration:none}
+  @media(max-width:640px){.nav-links a:not(.btn){display:none}}
+
   .btn{
-    display:inline-block;background:var(--green);color:#fff;font-weight:700;
-    padding:12px 26px;border-radius:999px;border:none;cursor:pointer;
-    font-size:1rem;font-family:inherit;transition:background .18s ease-out,transform .18s ease-out;
+    display:inline-block;background:var(--blue);color:#fff;font-weight:700;
+    padding:13px 28px;border-radius:999px;border:none;cursor:pointer;
+    font-size:1rem;font-family:"Inter",sans-serif;
+    transition:background .18s ease-out,transform .18s ease-out,box-shadow .18s ease-out;
   }
-  .btn:hover{background:var(--green-deep);text-decoration:none;transform:translateY(-1px)}
-  .btn.small{padding:9px 20px;font-size:.9rem}
-  .btn.big{padding:16px 36px;font-size:1.12rem}
+  .btn:hover{background:var(--blue-hi);text-decoration:none;transform:translateY(-2px);box-shadow:0 12px 30px -10px rgba(0,111,255,.55)}
+  .btn.small{padding:9px 20px;font-size:.88rem}
+  .btn.big{padding:17px 38px;font-size:1.1rem}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+  .btn.ghost:hover{background:var(--surface2);box-shadow:none;border-color:#3a3a3a}
 
   /* ---------- hero ---------- */
-  .hero{padding:clamp(48px,9vh,96px) 0 0;text-align:left}
+  .hero{position:relative;padding-top:clamp(120px,18vh,180px)}
+  .orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:-1}
+  .orb.blue{width:520px;height:520px;background:rgba(0,111,255,.16);top:-120px;left:-140px}
+  .orb.violet{width:420px;height:420px;background:rgba(139,131,232,.12);top:160px;right:-120px}
+  .orb.gold{width:300px;height:300px;background:rgba(251,188,0,.07);top:560px;left:30%}
   .kicker{
-    display:inline-block;font-weight:700;font-size:.85rem;color:var(--green-deep);
-    background:#E7EFE4;border:1px solid #CBDCC9;border-radius:999px;padding:5px 16px;
+    display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:.85rem;color:var(--gold);
+    background:rgba(251,188,0,.08);border:1px solid rgba(251,188,0,.25);border-radius:999px;padding:6px 16px;
   }
   h1{
-    font-size:clamp(2.9rem,8.5vw,5.4rem);font-weight:800;line-height:1.02;
-    letter-spacing:-.03em;margin:26px 0 0;max-width:14ch;
+    font-size:clamp(3rem,9vw,5.8rem);font-weight:800;line-height:1.0;
+    letter-spacing:-.03em;margin:28px 0 0;
   }
-  h1 em{font-style:normal;color:var(--green)}
-  .beads{display:flex;gap:7px;margin:26px 0 0;align-items:center}
-  .beads i{width:11px;height:11px;border-radius:50%;display:block}
-  .beads i:nth-child(4n+1){background:var(--ink)}
+  h1 em{font-style:normal;color:var(--blue-hi)}
+  .rotator-line{
+    margin:22px 0 0;font-size:clamp(1.15rem,2.8vw,1.5rem);font-weight:600;color:var(--muted);
+    display:flex;flex-wrap:wrap;gap:.45em;align-items:center;
+  }
+  .rotator{position:relative;display:inline-block;color:var(--gold);min-width:11ch;text-align:left;height:1.6em;overflow:hidden}
+  .rotator span{
+    position:absolute;left:0;top:0;white-space:nowrap;line-height:1.6em;
+    transform:translateY(110%);opacity:0;transition:transform .5s cubic-bezier(.16,1,.3,1),opacity .4s;
+  }
+  .rotator span.on{transform:translateY(0);opacity:1}
+  .rotator span.off{transform:translateY(-110%);opacity:0}
+  .beads{display:flex;gap:7px;margin:28px 0 0;align-items:center}
+  .beads i{width:10px;height:10px;border-radius:50%;display:block}
+  .beads i:nth-child(4n+1){background:var(--gold)}
   .beads i:nth-child(4n+2){background:var(--red)}
-  .beads i:nth-child(4n+3){background:#fff;border:1px solid var(--line)}
+  .beads i:nth-child(4n+3){background:#fff}
   .beads i:nth-child(4n+4){background:var(--green)}
-  .sub{font-size:clamp(1.05rem,2.4vw,1.3rem);color:var(--ink-soft);max-width:56ch;margin:24px 0 0}
-  .sub strong{color:var(--ink)}
-  .cta-row{display:flex;flex-wrap:wrap;align-items:center;gap:18px;margin:34px 0 0}
-  .cta-note{font-size:.88rem;color:var(--ink-soft)}
+  .sub{font-size:clamp(1.02rem,2.3vw,1.22rem);color:var(--muted);max-width:58ch;margin:24px 0 0}
+  .sub strong{color:var(--text)}
+  .cta-row{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin:36px 0 0}
+  .cta-note{font-size:.86rem;color:var(--muted)}
 
-  /* ---------- live demo ---------- */
-  .demo{margin:clamp(44px,7vh,72px) 0 0;padding-bottom:clamp(48px,8vh,90px)}
+  /* ---------- demo (3D tilt) ---------- */
+  .demo{margin:clamp(56px,9vh,90px) 0 0;padding-bottom:clamp(40px,7vh,70px);position:relative;perspective:1200px}
   .demo-stage{
-    background:#181822;border-radius:22px;padding:clamp(24px,5vw,54px);
-    box-shadow:0 30px 70px -30px rgba(32,37,30,.45);
-    position:relative;overflow:hidden;
+    background:linear-gradient(160deg,#121218 0%,#0b0b10 100%);
+    border:1px solid var(--line);border-radius:24px;
+    padding:clamp(24px,5vw,56px);
+    box-shadow:0 40px 90px -40px rgba(0,111,255,.28),0 20px 50px -30px rgba(0,0,0,.9);
+    position:relative;transform-style:preserve-3d;
+    transition:transform .35s cubic-bezier(.16,1,.3,1);
+    will-change:transform;
   }
   .fake-chat{
-    background:#20202c;border:1px solid #34344a;border-radius:14px;
-    padding:16px 20px;min-height:86px;color:#F0F0F5;font-size:clamp(1rem,2.4vw,1.25rem);
+    background:#16161e;border:1px solid #2c2c3a;border-radius:14px;
+    padding:16px 20px;min-height:88px;color:var(--text);font-size:clamp(1rem,2.4vw,1.22rem);
+    transform:translateZ(30px);
   }
-  .fake-chat .label{font-size:.75rem;color:#9a9ab0;letter-spacing:.04em;margin-bottom:8px}
+  .fake-chat .label{font-size:.74rem;color:var(--muted);letter-spacing:.04em;margin-bottom:8px}
   #typed{white-space:pre-wrap}
   .caret{display:inline-block;width:2px;height:1.15em;background:var(--gold);vertical-align:text-bottom;animation:blink 1s steps(1) infinite}
   @keyframes blink{50%{opacity:0}}
-  .pill-row{display:flex;justify-content:center;margin-top:26px}
+  .pill-row{display:flex;justify-content:center;margin-top:26px;transform:translateZ(50px)}
   .pill{
-    display:flex;align-items:center;gap:12px;background:#10101a;
-    border:1px solid #40405a;border-radius:999px;padding:12px 22px;min-width:230px;justify-content:center;
+    display:flex;align-items:center;gap:12px;background:#0a0a10;
+    border:1px solid #34344a;border-radius:999px;padding:12px 22px;min-width:240px;justify-content:center;
+    box-shadow:0 10px 30px -12px rgba(0,0,0,.8);
   }
-  .pill.rec{border-color:var(--red)}
+  .pill.rec{border-color:var(--red);box-shadow:0 0 0 4px rgba(232,24,42,.12),0 10px 30px -12px rgba(0,0,0,.8)}
   .bars{display:flex;align-items:center;gap:3px;height:26px}
-  .bars b{width:3.5px;border-radius:2px;background:#8f7cff;height:5px;transition:height .1s linear}
+  .bars b{width:3.5px;border-radius:2px;background:var(--violet);height:5px;transition:height .1s linear}
   .pill-text{color:#c9c9dc;font-size:.92rem;min-width:9ch}
-  .hearing{min-height:1.4em;text-align:center;color:#71718c;font-size:.9rem;margin-top:14px;font-style:italic}
+  .hearing{min-height:1.5em;text-align:center;color:#6a6a80;font-size:.9rem;margin-top:14px;font-style:italic}
+  .chip-float{
+    position:absolute;background:var(--surface2);border:1px solid var(--line);
+    border-radius:12px;padding:9px 16px;font-size:.85rem;font-weight:600;color:var(--muted);
+    box-shadow:0 14px 34px -14px rgba(0,0,0,.8);
+    animation:floaty 6s ease-in-out infinite;
+  }
+  .chip-float b{color:var(--text)}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+  .cf1{top:-22px;left:6%;animation-delay:0s}
+  .cf2{top:30%;right:-14px;animation-delay:1.6s}
+  .cf3{bottom:-20px;left:14%;animation-delay:3.1s}
+  @media(max-width:760px){.chip-float{display:none}}
+
+  /* ---------- marquee ---------- */
+  .marquee{border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);background:var(--surface);padding:20px 0;overflow:hidden;position:relative}
+  .marquee::before,.marquee::after{
+    content:"";position:absolute;top:0;bottom:0;width:90px;z-index:2;pointer-events:none;
+  }
+  .marquee::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
+  .marquee::after{right:0;background:linear-gradient(270deg,var(--bg),transparent)}
+  .marquee-track{display:flex;gap:14px;width:max-content;animation:scrollx 34s linear infinite}
+  .marquee:hover .marquee-track{animation-play-state:paused}
+  @keyframes scrollx{to{transform:translateX(-50%)}}
+  .mchip{background:var(--surface2);border:1px solid var(--line);border-radius:999px;padding:8px 20px;font-size:.9rem;font-weight:600;color:var(--muted);white-space:nowrap}
+  .mchip b{color:var(--text);font-weight:700}
 
   /* ---------- sections ---------- */
-  section{padding:clamp(52px,9vh,100px) 0}
-  h2{font-size:clamp(1.9rem,4.6vw,2.9rem);font-weight:800;letter-spacing:-.02em;line-height:1.08;max-width:22ch}
-  .lede{color:var(--ink-soft);max-width:58ch;margin:16px 0 0;font-size:1.08rem}
+  section{padding:clamp(64px,11vh,120px) 0;position:relative}
+  h2{font-size:clamp(2rem,5vw,3.1rem);font-weight:800;letter-spacing:-.02em;line-height:1.06;max-width:24ch}
+  h2 em{font-style:normal;color:var(--gold)}
+  .lede{color:var(--muted);max-width:60ch;margin:18px 0 0;font-size:1.08rem}
+  .lede strong{color:var(--text)}
 
-  .apps{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--paper);padding:34px 0}
-  .apps .wrap{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:center}
-  .apps span.t{font-weight:700;margin-right:8px}
-  .chip{background:var(--sand);border:1px solid var(--line);border-radius:999px;padding:7px 16px;font-size:.92rem;font-weight:600;color:var(--ink-soft)}
-
-  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:44px}
-  .step{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:26px}
-  .step .num{font-weight:800;font-size:2.6rem;color:var(--green);line-height:1}
-  .step h3{font-size:1.25rem;margin:12px 0 6px}
-  .step p{color:var(--ink-soft);font-size:.98rem}
-
-  .split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,64px);align-items:center;margin-top:48px}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,48px);align-items:stretch;margin-top:48px}
   @media(max-width:760px){.split{grid-template-columns:1fr}}
-  .transcript{border-radius:16px;padding:24px 26px;font-size:1.05rem}
-  .transcript .tag{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:10px}
-  .transcript.raw{background:#EFE9DA;color:var(--ink-soft)}
+  .transcript{border-radius:18px;padding:26px 28px;font-size:1.05rem;line-height:1.65}
+  .transcript .tag{font-size:.74rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:12px}
+  .transcript.raw{background:var(--surface);border:1px solid var(--line);color:var(--muted)}
   .transcript.raw .tag{color:var(--red)}
-  .transcript.raw s{text-decoration-color:var(--red)}
-  .transcript.clean{background:var(--ink);color:#F3F1E8}
+  .transcript.raw s{text-decoration-color:var(--red);text-decoration-thickness:2px}
+  .transcript.clean{background:linear-gradient(160deg,rgba(0,111,255,.14),rgba(0,111,255,.04));border:1px solid rgba(0,111,255,.35);color:var(--text)}
   .transcript.clean .tag{color:var(--gold)}
 
-  .feature{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,64px);align-items:center;margin-top:clamp(48px,8vh,84px)}
-  @media(max-width:760px){.feature{grid-template-columns:1fr}}
-  .feature h3{font-size:clamp(1.5rem,3.2vw,2rem);font-weight:800;letter-spacing:-.02em;line-height:1.12}
-  .feature p{color:var(--ink-soft);margin-top:12px}
-  .feature .art{
-    background:var(--paper);border:1px solid var(--line);border-radius:18px;
-    padding:28px;font-size:.95rem;
-  }
-  .art .row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px dashed var(--line)}
-  .art .row:last-child{border-bottom:none}
-  .art .row b{font-weight:700}
-  .art .arrow{color:var(--green);font-weight:800}
-  .bignum{font-size:clamp(3.4rem,9vw,6rem);font-weight:800;letter-spacing:-.04em;color:var(--green);line-height:1}
-  .bignum small{font-size:.35em;color:var(--ink-soft);font-weight:600;letter-spacing:0}
+  /* speed bars */
+  .race{margin-top:52px;display:grid;gap:26px}
+  .race-row .race-label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem;margin-bottom:10px}
+  .race-label .val{font-variant-numeric:tabular-nums;color:var(--text)}
+  .race-track{height:16px;background:var(--surface2);border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+  .race-fill{height:100%;width:0;border-radius:999px;transition:width 1.6s cubic-bezier(.16,1,.3,1)}
+  .race-fill.slow{background:#3a3a3a}
+  .race-fill.fast{background:linear-gradient(90deg,var(--blue),var(--violet))}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:56px}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:26px}
+  .stat .n{font-family:"Bricolage Grotesque";font-size:clamp(2rem,4.5vw,2.9rem);font-weight:800;color:var(--gold);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .stat .n small{font-size:.5em;color:var(--muted);font-weight:600}
+  .stat p{color:var(--muted);font-size:.92rem;margin-top:6px}
 
-  .offline{background:var(--ink);color:#F3F1E8;border-radius:26px;padding:clamp(36px,6vw,70px);margin-top:20px}
-  .offline h2{color:#F3F1E8}
-  .offline p{color:#B9BCA9;max-width:58ch;margin-top:16px;font-size:1.08rem}
-  .offline p strong{color:#F3F1E8}
-  .offline .beads{margin-top:30px}
+  /* steps */
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:48px}
+  .step{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:30px;transition:border-color .2s,transform .2s}
+  .step:hover{border-color:rgba(0,111,255,.5);transform:translateY(-4px)}
+  .step .num{font-family:"Bricolage Grotesque";font-weight:800;font-size:2.6rem;color:var(--blue-hi);line-height:1}
+  .step h3{font-size:1.3rem;margin:14px 0 8px}
+  .step p{color:var(--muted);font-size:.97rem}
+
+  /* features */
+  .feature{display:grid;grid-template-columns:1fr 1fr;gap:clamp(26px,5vw,72px);align-items:center;margin-top:clamp(56px,9vh,90px)}
+  @media(max-width:760px){.feature{grid-template-columns:1fr}}
+  .feature h3{font-size:clamp(1.55rem,3.4vw,2.1rem);font-weight:800;letter-spacing:-.02em;line-height:1.12}
+  .feature h3 em{font-style:normal;color:var(--blue-hi)}
+  .feature p{color:var(--muted);margin-top:14px}
+  .feature p strong{color:var(--text)}
+  .feature .art{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:30px;font-size:.95rem}
+  .art .row{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px dashed var(--line)}
+  .art .row:last-child{border-bottom:none}
+  .art .row b{font-weight:700;color:var(--text)}
+  .art .row span:first-child{color:var(--muted)}
+  .art .arrow{color:var(--gold);font-weight:800}
+
+  .offline{
+    background:linear-gradient(155deg,#0a1424 0%,#050508 70%);
+    border:1px solid rgba(0,111,255,.3);border-radius:28px;
+    padding:clamp(38px,6vw,72px);margin-top:24px;position:relative;overflow:hidden;
+  }
+  .offline::after{
+    content:"";position:absolute;width:380px;height:380px;border-radius:50%;
+    background:rgba(0,111,255,.14);filter:blur(80px);top:-120px;right:-80px;pointer-events:none;
+  }
+  .offline p{color:var(--muted);max-width:58ch;margin-top:18px;font-size:1.08rem;position:relative;z-index:1}
+  .offline p strong{color:var(--text)}
+  .offline .beads{margin-top:32px}
+
+  /* explainer */
+  .explain{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:48px}
+  .ex{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:30px}
+  .ex h3{font-size:1.2rem;margin-bottom:10px;color:var(--text)}
+  .ex h3 span{color:var(--gold);margin-right:8px}
+  .ex p{color:var(--muted);font-size:.95rem}
+  .ex ul{list-style:none;margin-top:10px}
+  .ex li{color:var(--muted);font-size:.93rem;padding:7px 0;border-bottom:1px dashed var(--line-soft)}
+  .ex li:last-child{border-bottom:none}
+  .ex li b{color:var(--text)}
 
   .langs{text-align:center}
   .langs h2{margin:0 auto}
-  .lang-line{font-size:clamp(1.4rem,4vw,2.2rem);font-weight:700;margin-top:26px;line-height:1.5}
-  .lang-line span{opacity:.35}
+  .lang-line{font-size:clamp(1.35rem,4vw,2.1rem);font-weight:700;margin-top:28px;line-height:1.55}
+  .lang-line span{opacity:.3}
 
-  details{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 24px;margin-top:12px}
-  details summary{font-weight:700;cursor:pointer;font-size:1.05rem;list-style:none;display:flex;justify-content:space-between;align-items:center}
-  details summary::after{content:"+";font-size:1.4rem;color:var(--green);font-weight:600}
+  /* faq */
+  details{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px 26px;margin-top:12px;transition:border-color .2s}
+  details[open]{border-color:rgba(0,111,255,.4)}
+  details summary{font-weight:700;cursor:pointer;font-size:1.04rem;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"+";font-size:1.5rem;color:var(--gold);font-weight:500;flex-shrink:0}
   details[open] summary::after{content:"–"}
-  details p{color:var(--ink-soft);margin-top:12px;max-width:70ch}
-  details a{font-weight:600}
+  details p{color:var(--muted);margin-top:12px;max-width:72ch}
+  details p b{color:var(--text)}
 
-  .final{text-align:center;background:var(--paper);border-top:1px solid var(--line)}
-  .final h2{margin:0 auto;max-width:18ch}
+  /* feedback */
+  .feedback-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:clamp(26px,5vw,64px);margin-top:44px;align-items:start}
+  @media(max-width:820px){.feedback-grid{grid-template-columns:1fr}}
+  form{display:grid;gap:14px}
+  input,textarea{
+    background:var(--surface2);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;color:var(--text);font-family:"Inter",sans-serif;font-size:.98rem;width:100%;
+    transition:border-color .15s;
+  }
+  input:focus,textarea:focus{outline:none;border-color:var(--blue)}
+  input::placeholder,textarea::placeholder{color:#6a6a6a}
+  textarea{min-height:150px;resize:vertical}
+  .thanks{background:rgba(26,157,92,.1);border:1px solid rgba(26,157,92,.4);border-radius:16px;padding:26px;display:none}
+  .thanks b{color:var(--text)}
+
+  .final{text-align:center;border-top:1px solid var(--line-soft);background:var(--surface)}
+  .final h2{margin:0 auto;max-width:20ch}
   .final .cta-row{justify-content:center}
 
-  footer{border-top:1px solid var(--line);padding:34px 0 46px;color:var(--ink-soft);font-size:.92rem}
-  .foot{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center}
+  footer{border-top:1px solid var(--line-soft);padding:38px 0 52px;color:var(--muted);font-size:.92rem}
+  .foot{display:flex;flex-wrap:wrap;gap:12px 30px;align-items:center}
   .foot .beads{margin:0}
   .foot .beads i{width:8px;height:8px}
 </style>
 </head>
 <body>
 
-<nav>
+<nav id="nav">
   <div class="wrap nav-in">
-    <a class="logo" href="#">BONGA<span class="dot">.</span></a>
+    <a class="logo" href="#">BONGA<span class="dot">.</span><small>by Ken Designers</small></a>
     <div class="nav-links">
       <a href="#how">How it works</a>
+      <a href="#inside">What's inside</a>
       <a href="#faq">FAQ</a>
-      <a href="https://github.com/kenikiara/bonga">GitHub</a>
+      <a href="#feedback">Feedback</a>
       <a class="btn small" href="https://github.com/kenikiara/bonga/releases/latest/download/Bonga-win64.zip">Download free</a>
     </div>
   </div>
 </nav>
 
 <header class="hero wrap">
-  <span class="kicker">Free for Windows · Made in Kenya 🇰🇪</span>
-  <h1>Usiandike.<br><em>Bonga.</em></h1>
-  <div class="beads" aria-hidden="true">
+  <div class="orb blue"></div><div class="orb violet"></div><div class="orb gold"></div>
+  <span class="kicker" data-reveal>● Free for Windows · Made in Kenya 🇰🇪</span>
+  <h1 data-reveal>Usiandike.<br><em>Bonga.</em></h1>
+  <div class="rotator-line" data-reveal>
+    <span>Speak your</span>
+    <span class="rotator" id="rotator">
+      <span class="on">WhatsApp messages</span>
+      <span>client emails</span>
+      <span>class assignments</span>
+      <span>long reports</span>
+      <span>code comments</span>
+      <span>captions &amp; posts</span>
+    </span>
+  </div>
+  <div class="beads" data-reveal aria-hidden="true">
     <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
   </div>
-  <p class="sub"><strong>Bonga ni kuongea.</strong> Hold one key, say what you're thinking, and BONGA types it for you in any app on your laptop. WhatsApp, Gmail, Word, wherever. Clean, punctuated, no typos, hakuna filler words.</p>
-  <div class="cta-row">
+  <p class="sub" data-reveal><strong>Bonga ni kuongea.</strong> Hold one key, say what you're thinking, and BONGA types it for you in any app on your laptop. Clean, punctuated, hakuna filler words. No account, no subscription, no internet needed after setup.</p>
+  <div class="cta-row" data-reveal>
     <a class="btn big" href="https://github.com/kenikiara/bonga/releases/latest/download/Bonga-win64.zip">Download free for Windows</a>
-    <span class="cta-note">~70 MB zip · no account · no internet needed after setup</span>
+    <a class="btn big ghost" href="#how">See how it works</a>
   </div>
+  <p class="cta-note" data-reveal style="margin-top:14px">~70 MB zip · Windows 10/11 · your voice never leaves your laptop</p>
 </header>
 
-<div class="demo wrap">
-  <div class="demo-stage">
+<div class="demo wrap" data-reveal>
+  <div class="demo-stage" id="tilt">
+    <div class="chip-float cf1">💬 <b>WhatsApp Web</b></div>
+    <div class="chip-float cf2">📧 <b>Gmail</b></div>
+    <div class="chip-float cf3">📄 <b>Word</b></div>
     <div class="fake-chat">
       <div class="label">WhatsApp Web · message to Brian</div>
       <span id="typed"></span><span class="caret" id="caret" style="display:none"></span>
@@ -227,46 +360,32 @@
   </div>
 </div>
 
-<div class="apps">
-  <div class="wrap">
-    <span class="t">Works everywhere you type:</span>
-    <span class="chip">WhatsApp Web</span><span class="chip">Gmail</span><span class="chip">Word</span>
-    <span class="chip">Excel</span><span class="chip">Telegram</span><span class="chip">ChatGPT</span>
-    <span class="chip">VS Code</span><span class="chip">Facebook</span><span class="chip">+ any text box</span>
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="mtrack">
+    <span class="mchip">Works in <b>WhatsApp Web</b></span>
+    <span class="mchip"><b>Gmail</b></span>
+    <span class="mchip"><b>Word</b></span>
+    <span class="mchip"><b>Excel</b></span>
+    <span class="mchip"><b>Telegram</b></span>
+    <span class="mchip"><b>ChatGPT</b></span>
+    <span class="mchip"><b>VS Code</b></span>
+    <span class="mchip"><b>Facebook</b></span>
+    <span class="mchip"><b>Instagram Web</b></span>
+    <span class="mchip"><b>Notion</b></span>
+    <span class="mchip"><b>Google Docs</b></span>
+    <span class="mchip">+ any text box on Windows</span>
   </div>
 </div>
 
-<section id="how" class="wrap">
-  <h2>Ongea, inaandika.</h2>
-  <p class="lede">No new app to type inside. BONGA sits quietly in your system tray and works in whatever you already have open.</p>
-  <div class="steps">
-    <div class="step">
-      <div class="num">1</div>
-      <h3>Shika</h3>
-      <p>Click into any text box, then hold <kbd>Right Ctrl</kbd>. You'll see a small bar appear at the bottom of your screen.</p>
-    </div>
-    <div class="step">
-      <div class="num">2</div>
-      <h3>Bonga</h3>
-      <p>Say it like you'd say it to a friend. Don't mind the "aaah" and "umm", don't announce commas. Just talk.</p>
-    </div>
-    <div class="step">
-      <div class="num">3</div>
-      <h3>Achilia</h3>
-      <p>Let go of the key. In a second or two your words land in the text box, cleaned up and punctuated. Press <kbd>Enter</kbd>, send.</p>
-    </div>
-  </div>
-</section>
-
-<section class="wrap" style="padding-top:0">
-  <h2>It cleans up your rambling.</h2>
-  <p class="lede">You speak the way people actually speak. BONGA removes the stumbles, fixes the punctuation, and keeps what you meant.</p>
+<section class="wrap">
+  <h2 data-reveal>It cleans up your rambling.</h2>
+  <p class="lede" data-reveal>You speak the way people actually speak, with the "umm" and the repeats and the missing commas. BONGA's cleanup pass removes the stumbles, fixes punctuation, and keeps exactly what you meant.</p>
   <div class="split">
-    <div class="transcript raw">
+    <div class="transcript raw" data-reveal>
       <span class="tag">What you said</span>
       "<s>um</s> tell the team that the invoice <s>is is</s> ready <s>uh</s> and they can pick the cheque thursday"
     </div>
-    <div class="transcript clean">
+    <div class="transcript clean" data-reveal>
       <span class="tag">What BONGA types</span>
       "Tell the team that the invoice is ready and they can pick the cheque Thursday."
     </div>
@@ -274,47 +393,132 @@
 </section>
 
 <section class="wrap" style="padding-top:0">
-  <div class="offline">
-    <h2>Zero bundles. Zero cloud. Zero stress.</h2>
-    <p>Other dictation apps upload your voice to servers abroad and charge you monthly for the privilege. BONGA runs the speech recognition <strong>on your own laptop</strong>. Your voice never leaves the machine. It works in a mat on Thika Road with zero bars, it works when the WiFi imekufa, it works in shags. Download once, bonga forever.</p>
-    <div class="beads" aria-hidden="true">
-      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+  <h2 data-reveal>Faster than your thumbs. <em>Sio siri.</em></h2>
+  <p class="lede" data-reveal>People speak at about 150 words a minute and type at about 40. Watch the race:</p>
+  <div class="race" id="race" data-reveal>
+    <div class="race-row">
+      <div class="race-label"><span>⌨️ Typing</span><span class="val"><b data-count="40">0</b> WPM</span></div>
+      <div class="race-track"><div class="race-fill slow" data-w="27%"></div></div>
     </div>
+    <div class="race-row">
+      <div class="race-label"><span>🎙️ Bonga</span><span class="val"><b data-count="150">0</b> WPM</span></div>
+      <div class="race-track"><div class="race-fill fast" data-w="100%"></div></div>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat" data-reveal><div class="n"><span data-count="25">0</span><small>&nbsp;s</small></div><p>A ten-second voice note becomes text in about 2.5 seconds, on an ordinary laptop.</p></div>
+    <div class="stat" data-reveal><div class="n"><span data-count="100">0</span>+</div><p>Languages, including Kiswahili. Auto-detect or pin yours in Settings.</p></div>
+    <div class="stat" data-reveal><div class="n">KSh <span data-count="0">0</span></div><p>What it costs you. Free while it's young; early birds keep it.</p></div>
+  </div>
+</section>
+
+<section id="how" class="wrap" style="padding-top:0">
+  <h2 data-reveal>Ongea, inaandika.</h2>
+  <p class="lede" data-reveal>There's no new app to type inside. BONGA sits quietly in your system tray and works in whatever you already have open.</p>
+  <div class="steps">
+    <div class="step" data-reveal>
+      <div class="num">1</div>
+      <h3>Shika</h3>
+      <p>Click into any text box, then hold <kbd>Right Ctrl</kbd>. A small bar with a moving waveform appears at the bottom of your screen.</p>
+    </div>
+    <div class="step" data-reveal>
+      <div class="num">2</div>
+      <h3>Bonga</h3>
+      <p>Say it like you'd say it to a friend. Don't mind the "aaah" and "umm", don't announce commas. Just talk.</p>
+    </div>
+    <div class="step" data-reveal>
+      <div class="num">3</div>
+      <h3>Achilia</h3>
+      <p>Let go of the key. In a second or two your words land in the text box, cleaned and punctuated. Press <kbd>Enter</kbd>, send.</p>
+    </div>
+  </div>
+  <p class="lede" data-reveal style="margin-top:26px">Bonus moves: <strong>quick-tap</strong> Right Ctrl for hands-free mode (talk as long as you want, tap again to finish), and <kbd>Esc</kbd> cancels a dictation you regret.</p>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div class="offline" data-reveal>
+    <h2>Zero bundles. Zero cloud. <em>Zero stress.</em></h2>
+    <p>Other dictation tools upload your voice to servers abroad and charge monthly for the privilege. BONGA runs the speech recognition <strong>on your own laptop</strong> using an open-source AI model. Your voice never leaves the machine. It works in a mat on Thika Road with zero bars, it works when the WiFi imekufa, it works in shags. Download once, bonga forever.</p>
+    <p style="margin-top:14px"><strong>Easiest proof:</strong> put your laptop in airplane mode and try it. Everything still works.</p>
+    <div class="beads" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
   </div>
 </section>
 
 <section class="wrap" style="padding-top:0">
   <div class="feature">
-    <div>
-      <h3>Teach it your people and your places.</h3>
-      <p>Add names to the personal dictionary, Wanjiku, Kipchoge, Githurai, M-Pesa, and BONGA spells them right instead of guessing. Set up voice snippets too: say <em>"insert my email"</em> and your whole signature drops in.</p>
+    <div data-reveal>
+      <h3>Teach it <em>your</em> people and places.</h3>
+      <p>Generic dictation apps butcher Kenyan names. BONGA has a <strong>personal dictionary</strong>: add Wanjiku, Kipchoge, Githurai, M-Pesa once, and it spells them right instead of guessing.</p>
+      <p><strong>Snippets</strong> go further: say a trigger phrase like <em>"insert my email"</em> and a whole block of text you saved drops in. Signatures, payment details, directions to your shop.</p>
     </div>
-    <div class="art">
+    <div class="art" data-reveal>
       <div class="row"><span>wanjiko</span><span class="arrow">→</span><b>Wanjiku</b></div>
       <div class="row"><span>em pesa</span><span class="arrow">→</span><b>M-Pesa</b></div>
+      <div class="row"><span>gith urai</span><span class="arrow">→</span><b>Githurai</b></div>
       <div class="row"><span>"insert my email"</span><span class="arrow">→</span><b>ken@kendesigners.com ✍️</b></div>
     </div>
   </div>
   <div class="feature">
-    <div class="art" style="text-align:center">
-      <div class="bignum">2.5s <small>per voice note</small></div>
+    <div class="art" data-reveal>
+      <div class="row"><span>Dictations today</span><b>23</b></div>
+      <div class="row"><span>Words written</span><b>4,180</b></div>
+      <div class="row"><span>Time saved vs typing</span><b>1.4 h</b></div>
+      <div class="row"><span>History</span><b>Every dictation, copy anytime</b></div>
     </div>
-    <div>
-      <h3>Faster than your thumbs.</h3>
-      <p>On an ordinary two-core laptop, a ten-second thought becomes text in about 2.5 seconds. People speak at 150 words a minute and type at 40. Do the math on every email you'll ever write.</p>
+    <div data-reveal>
+      <h3>Your words, <em>your receipts.</em></h3>
+      <p>BONGA keeps a private on-device history of everything you've dictated, with one-click copy. The Home screen counts your words and shows the hours your mouth saved your hands.</p>
     </div>
   </div>
 </section>
 
 <section class="langs wrap" style="padding-top:0">
-  <h2>Bonga in your language.</h2>
-  <p class="lang-line">English <span>·</span> Kiswahili <span>·</span> Français <span>·</span> العربية <span>·</span> हिन्दी <span>·</span> 中文 <span>+ 90 more</span></p>
-  <p class="lede" style="margin:18px auto 0">Auto-detect, or pin your language in Settings for best results.</p>
+  <h2 data-reveal>Bonga in your language.</h2>
+  <p class="lang-line" data-reveal>English <span>·</span> Kiswahili <span>·</span> Français <span>·</span> العربية <span>·</span> हिन्दी <span>·</span> 中文 <span>+ 90 more</span></p>
+  <p class="lede" data-reveal style="margin:18px auto 0">Auto-detect, or pin your language in Settings for best results. Pure English and pure Kiswahili work best; heavy Sheng mid-sentence is hit and miss for now, tuko njiani.</p>
+</section>
+
+<section id="inside" class="wrap" style="padding-top:0">
+  <h2 data-reveal>What exactly is this thing?</h2>
+  <p class="lede" data-reveal>Fair question. BONGA is a small Windows program, not a website and not a plugin. Here's the honest breakdown:</p>
+  <div class="explain">
+    <div class="ex" data-reveal>
+      <h3><span>01</span>The brain</h3>
+      <p>Speech recognition runs on <b style="color:var(--text)">Whisper</b>, an open-source AI model, executing entirely on your CPU. BONGA ships ready to go and lets you swap models in Settings:</p>
+      <ul>
+        <li><b>Fast</b> (default) · quick answers on modest laptops</li>
+        <li><b>High quality</b> · more accurate, a bit slower</li>
+        <li>All of them work <b>fully offline</b></li>
+      </ul>
+    </div>
+    <div class="ex" data-reveal>
+      <h3><span>02</span>The cleanup</h3>
+      <p>Raw speech is messy. After transcribing, BONGA:</p>
+      <ul>
+        <li>Removes fillers: um, uh, mhh</li>
+        <li>Collapses stutters ("the the" → "the")</li>
+        <li>Capitalizes and punctuates sentences</li>
+        <li>Applies your dictionary corrections</li>
+        <li>Obeys voice commands: <b>"new line"</b>, <b>"new paragraph"</b></li>
+      </ul>
+    </div>
+    <div class="ex" data-reveal>
+      <h3><span>03</span>The requirements</h3>
+      <ul>
+        <li><b>Windows 10 or 11</b>, 64-bit</li>
+        <li>About <b>4 GB RAM</b> and 350 MB disk</li>
+        <li>Any microphone, built-in is fine</li>
+        <li>No graphics card, no admin rights</li>
+        <li>Internet only for the first download</li>
+      </ul>
+      <p style="margin-top:12px">Full source code is public on <a href="https://github.com/kenikiara/bonga">GitHub</a>. Check it, fork it, audit it.</p>
+    </div>
+  </div>
 </section>
 
 <section id="faq" class="wrap" style="padding-top:0">
-  <h2>Maswali.</h2>
-  <div style="margin-top:30px">
+  <h2 data-reveal>Maswali.</h2>
+  <div style="margin-top:32px" data-reveal>
     <details open>
       <summary>Is it really free?</summary>
       <p>Right now, yes. Fully. No trial, no locked features, no card. BONGA is young and I want real people using it and telling me what's broken. A paid version may come later; whoever downloads now gets it free.</p>
@@ -324,35 +528,59 @@
       <p>Not a virus. That's Microsoft SmartScreen, and it flags any new app that hasn't bought a code-signing certificate yet (they cost hundreds of dollars a year). Click <b>More info</b>, then <b>Run anyway</b>. The full source code is public on <a href="https://github.com/kenikiara/bonga">GitHub</a> if you want to check what it does.</p>
     </details>
     <details>
-      <summary>What does my laptop need?</summary>
-      <p>Windows 10 or 11 (64-bit), about 4 GB of RAM, a microphone (your laptop's built-in one is fine), and ~350 MB of disk space. No graphics card needed.</p>
+      <summary>How do I install it?</summary>
+      <p>Download the zip, right-click → <b>Extract All</b>, open the folder, and double-click <b>Bonga.exe</b>. The Home screen will tell you if the speech model needs its one-time download (one click). Then open WhatsApp Web, hold <kbd>Right Ctrl</kbd>, and say hi to someone. Tip: in Settings you can tick "Launch BONGA when Windows starts" so it's always ready.</p>
     </details>
     <details>
       <summary>Does it understand Kiswahili?</summary>
-      <p>Yes. It ships with a multilingual model that covers Kiswahili and 100+ other languages. Set your language in Settings → Language, or leave it on auto-detect. Pure English and pure Kiswahili work best; heavy Sheng mid-sentence is hit and miss for now, tuko njiani.</p>
+      <p>Yes. It ships with a multilingual model covering Kiswahili and 100+ other languages. Set your language in Settings → Language, or leave it on auto-detect.</p>
     </details>
     <details>
       <summary>Is my voice uploaded anywhere?</summary>
       <p>No. Transcription happens on your laptop using an open-source model (Whisper). BONGA works with the internet switched off, which is the easiest proof: airplane mode it and try.</p>
     </details>
     <details>
-      <summary>How do I install it?</summary>
-      <p>Download the zip, right-click → Extract All, open the folder, and double-click <b>Bonga.exe</b>. On the Home screen the speech model is already set up; if it isn't, one click downloads it. Then open WhatsApp Web, hold <kbd>Right Ctrl</kbd>, and say hi to someone.</p>
+      <summary>The text comes out wrong sometimes. Nifanye nini?</summary>
+      <p>Three fixes, in order: speak a touch slower near the mic; add the names it keeps missing to <b>Dictionary</b>; and if your laptop can afford it, switch to the higher-quality model in <b>Settings → Speech model</b>. Then tell me what it misheard in the feedback box below, real examples are gold.</p>
     </details>
     <details>
-      <summary>Found a bug? Have an idea?</summary>
-      <p>That's exactly what this launch is for. Open an issue on <a href="https://github.com/kenikiara/bonga/issues">GitHub</a> or reach me through <a href="https://www.kendesigners.com">kendesigners.com</a>. Ambia pia your friends.</p>
+      <summary>How do I update or uninstall?</summary>
+      <p>Update: download the new zip from this page and replace the old folder. Uninstall: delete the folder. BONGA keeps its settings in your Windows profile; delete <b>%APPDATA%\Bonga</b> too if you want every trace gone.</p>
     </details>
+  </div>
+</section>
+
+<section id="feedback" class="wrap" style="padding-top:0">
+  <div class="feedback-grid">
+    <div data-reveal>
+      <h2>Niambie. <em>Seriously.</em></h2>
+      <p class="lede">This is v1 from a one-man studio in Nairobi. Your feedback decides what gets built next. What it misheard, what confused you, what you wish it did. Sitaki flattery, nataka ukweli.</p>
+      <p class="lede" style="margin-top:12px">Messages land straight in my inbox at <strong>ken@kendesigners.com</strong>.</p>
+    </div>
+    <div data-reveal>
+      <div class="thanks" id="thanks"><b>Asante! 🙏</b><br>Your feedback is on its way to Ken's inbox. If you left your email, you'll hear back.</div>
+      <form id="fbform" action="https://formsubmit.co/ken@kendesigners.com" method="POST">
+        <input type="hidden" name="_subject" value="BONGA feedback">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="https://kenikiara.github.io/bonga/?sent=1#feedback">
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+        <input type="text" name="name" placeholder="Your name (optional)">
+        <input type="email" name="email" placeholder="Your email, if you want a reply (optional)">
+        <textarea name="message" required placeholder="What worked? What broke? What did it mishear? Andika hapa…"></textarea>
+        <button class="btn big" type="submit">Tuma feedback →</button>
+      </form>
+    </div>
   </div>
 </section>
 
 <section class="final">
   <div class="wrap">
-    <h2>Acha kuandika. Anza ku-bonga.</h2>
-    <div class="cta-row">
+    <h2 data-reveal>Acha kuandika.<br>Anza ku-bonga.</h2>
+    <div class="cta-row" data-reveal>
       <a class="btn big" href="https://github.com/kenikiara/bonga/releases/latest/download/Bonga-win64.zip">Download BONGA free</a>
     </div>
-    <p class="cta-note" style="margin-top:14px">Windows 10/11 · 64-bit · free while it's young</p>
+    <p class="cta-note" data-reveal style="margin-top:16px">Windows 10/11 · 64-bit · free while it's young</p>
   </div>
 </section>
 
@@ -361,12 +589,97 @@
     <div class="beads" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     <span>Built in Nairobi by <a href="https://www.kendesigners.com">Ken Designers</a></span>
     <span><a href="https://github.com/kenikiara/bonga">Source on GitHub</a></span>
+    <span><a href="mailto:ken@kendesigners.com">ken@kendesigners.com</a></span>
     <span>© 2026 BONGA</span>
   </div>
 </footer>
 
 <script>
 (function(){
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* nav shrink */
+  const nav = document.getElementById('nav');
+  addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 12), {passive:true});
+  nav.classList.toggle('scrolled', scrollY > 12);
+
+  /* reveal on scroll */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold:.14, rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('[data-reveal]').forEach((el,i) => {
+    el.style.transitionDelay = (Math.min(i % 6, 4) * 60) + 'ms';
+    io.observe(el);
+  });
+
+  /* hero word rotator */
+  const rot = document.getElementById('rotator');
+  const words = [...rot.children];
+  let wi = 0;
+  function sizeRotator(){
+    const widest = Math.max(...words.map(w => w.getBoundingClientRect().width));
+    if (widest) rot.style.minWidth = Math.ceil(widest + 2) + 'px';
+  }
+  sizeRotator();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(sizeRotator);
+  setInterval(() => {
+    words[wi].classList.remove('on'); words[wi].classList.add('off');
+    const prev = wi; wi = (wi + 1) % words.length;
+    const next = words[wi];
+    next.classList.remove('off'); next.classList.add('on');
+    setTimeout(() => words[prev].classList.remove('off'), 520);
+  }, 2400);
+
+  /* 3D tilt on the demo card */
+  const tilt = document.getElementById('tilt');
+  if (!reduced && matchMedia('(hover:hover)').matches){
+    tilt.addEventListener('mousemove', e => {
+      const r = tilt.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5;
+      const y = (e.clientY - r.top) / r.height - .5;
+      tilt.style.transform = `rotateY(${x*7}deg) rotateX(${-y*7}deg)`;
+    });
+    tilt.addEventListener('mouseleave', () => { tilt.style.transform = ''; });
+  }
+
+  /* marquee: duplicate content for a seamless loop */
+  const mtrack = document.getElementById('mtrack');
+  mtrack.innerHTML += mtrack.innerHTML;
+
+  /* count-ups + race bars */
+  function countUp(el){
+    const target = +el.dataset.count;
+    if (target === 0){ el.textContent = '0'; return; }
+    const t0 = performance.now(), dur = 1400;
+    function tick(t){
+      const p = Math.min(1, (t - t0) / dur);
+      const eased = 1 - Math.pow(1 - p, 4);
+      let v = Math.round(target * eased);
+      el.textContent = target === 25 ? (v / 10).toFixed(1) : v;
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  const io2 = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.querySelectorAll('[data-count]').forEach(countUp);
+      e.target.querySelectorAll('.race-fill').forEach(f => { f.style.width = f.dataset.w; });
+      io2.unobserve(e.target);
+    });
+  }, {threshold:.4});
+  document.querySelectorAll('#race, .stat').forEach(el => io2.observe(el));
+
+  /* feedback thank-you state */
+  if (location.search.includes('sent=1')){
+    document.getElementById('thanks').style.display = 'block';
+    document.getElementById('fbform').style.display = 'none';
+    document.getElementById('feedback').scrollIntoView();
+  }
+
+  /* live demo loop */
   const bars = document.getElementById('bars');
   const NB = 12;
   for (let i = 0; i < NB; i++) bars.appendChild(document.createElement('b'));
@@ -376,7 +689,6 @@
   const typed = document.getElementById('typed');
   const caret = document.getElementById('caret');
   const hearing = document.getElementById('hearing');
-
   const demos = [
     { raw: "niaje brian uko na ile report ya jana...",
       out: "Niaje Brian, uko na ile report ya jana?" },
@@ -386,40 +698,32 @@
       out: "Meeting imehamia saa nane kesho, usichelewe." }
   ];
   let d = 0, animId = null;
-
   function wave(on){
-    if (animId) { clearInterval(animId); animId = null; }
+    if (animId){ clearInterval(animId); animId = null; }
     if (on){
       animId = setInterval(() => {
-        for (let i = 0; i < NB; i++)
-          bs[i].style.height = (4 + Math.random() * 20) + 'px';
+        for (let i = 0; i < NB; i++) bs[i].style.height = (4 + Math.random() * 20) + 'px';
       }, 90);
     } else {
       for (let i = 0; i < NB; i++) bs[i].style.height = '5px';
     }
   }
-
-  function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
-
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
   async function cycle(){
     const demo = demos[d % demos.length]; d++;
-    // idle
     typed.textContent = ''; caret.style.display = 'none';
     hearing.innerHTML = '&nbsp;';
     pill.classList.remove('rec'); pillText.textContent = 'Hold Right Ctrl…'; wave(false);
     await sleep(1600);
-    // listening
     pill.classList.add('rec'); pillText.textContent = 'Listening…'; wave(true);
     for (let i = 0; i <= demo.raw.length; i += 3){
       hearing.textContent = 'hearing: "' + demo.raw.slice(0, i) + '"';
       await sleep(70);
     }
     await sleep(300);
-    // processing
     pill.classList.remove('rec'); pillText.textContent = 'Transcribing…'; wave(false);
     hearing.innerHTML = '&nbsp;';
     await sleep(800);
-    // typing
     pillText.textContent = 'Done ✓'; caret.style.display = 'inline-block';
     for (let i = 0; i <= demo.out.length; i++){
       typed.textContent = demo.out.slice(0, i);
