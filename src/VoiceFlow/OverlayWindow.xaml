@@ -1,0 +1,28 @@
+<Window x:Class="VoiceFlow.OverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        Topmost="True" ShowInTaskbar="False" ShowActivated="False" Focusable="False"
+        SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+    <Border x:Name="Pill" CornerRadius="20" Background="#F0181824"
+            BorderBrush="#40FFFFFF" BorderThickness="1" Padding="16,9"
+            Cursor="Hand" MouseLeftButtonDown="Pill_MouseDown">
+        <Grid>
+            <StackPanel x:Name="IdlePanel" Orientation="Horizontal" VerticalAlignment="Center">
+                <Ellipse Width="8" Height="8" Fill="{StaticResource AccentBrush}" VerticalAlignment="Center"/>
+                <TextBlock x:Name="IdleText" Text="BONGA" Foreground="#C0FFFFFF" FontSize="12" Margin="8,0,0,0" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel x:Name="RecordPanel" Orientation="Horizontal" Visibility="Collapsed" VerticalAlignment="Center">
+                <StackPanel x:Name="BarsPanel" Orientation="Horizontal" VerticalAlignment="Center" Height="26"/>
+                <TextBlock x:Name="TimerText" Text="0:00" Foreground="#C0FFFFFF" FontSize="12" Margin="10,0,0,0" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel x:Name="ProcessingPanel" Orientation="Horizontal" Visibility="Collapsed" VerticalAlignment="Center">
+                <TextBlock x:Name="ProcessingText" Text="Transcribing…" Foreground="#C0FFFFFF" FontSize="12" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <TextBlock x:Name="FlashText" Visibility="Collapsed" Foreground="#FF9AF0B4" FontSize="12" VerticalAlignment="Center"/>
+        </Grid>
+    </Border>
+</Window>

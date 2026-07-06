@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Whisper.net" Version="1.7.4" />
+    <PackageReference Include="Whisper.net.Runtime" Version="1.7.4" />
+  </ItemGroup>
+
+  <!-- Test the app's real formatting pipeline against the same sources -->
+  <ItemGroup>
+    <Compile Include="..\..\src\VoiceFlow\Core\AppSettings.cs" />
+    <Compile Include="..\..\src\VoiceFlow\Core\TextFormatter.cs" />
+  </ItemGroup>
+
+</Project>
