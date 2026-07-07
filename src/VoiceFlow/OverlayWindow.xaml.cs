@@ -184,4 +184,14 @@ public partial class OverlayWindow : Window
         else if (c.State == DictationState.Recording)
             await c.StopAndInsertAsync();
     }
+
+    // The "✕" on the idle pill: dismiss the Flow Bar so it isn't always on
+    // screen. It still pops up while you dictate; re-enable the resting bar
+    // from the tray menu or Settings. The Button swallows the mouse press, so
+    // this never falls through to Pill_MouseDown and starts a recording.
+    private void Close_Click(object sender, RoutedEventArgs e)
+    {
+        Services.Settings.Current.ShowFlowBar = false;
+        Services.Settings.Save();   // fires Changed -> UpdateState -> Hide()
+    }
 }

@@ -11,6 +11,25 @@
             <StackPanel x:Name="IdlePanel" Orientation="Horizontal" VerticalAlignment="Center">
                 <Ellipse Width="8" Height="8" Fill="{StaticResource AccentBrush}" VerticalAlignment="Center"/>
                 <TextBlock x:Name="IdleText" Text="BONGA" Foreground="#C0FFFFFF" FontSize="12" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                <Button x:Name="CloseBtn" Click="Close_Click" Cursor="Hand"
+                        Width="16" Height="16" Margin="12,0,0,0" Padding="0"
+                        Background="Transparent" BorderThickness="0" Foreground="#70FFFFFF"
+                        ToolTip="Hide the Flow Bar. Bring it back from the tray icon or Settings.">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="bg" CornerRadius="8" Background="Transparent">
+                                <TextBlock Text="✕" FontSize="10" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                           Foreground="{TemplateBinding Foreground}"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="bg" Property="Background" Value="#30FFFFFF"/>
+                                    <Setter Property="Foreground" Value="#F0FFFFFF"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
             </StackPanel>
 
             <StackPanel x:Name="RecordPanel" Orientation="Horizontal" Visibility="Collapsed" VerticalAlignment="Center">

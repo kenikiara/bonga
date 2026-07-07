@@ -10,6 +10,7 @@ public partial class App : Application
     private static Mutex? _mutex;
     private WF.NotifyIcon? _tray;
     private WF.ToolStripMenuItem? _trayDictateItem;
+    private WF.ToolStripMenuItem? _trayFlowBarItem;
     private SD.Icon? _iconIdle, _iconRec, _iconProc;
     private OverlayWindow? _overlay;
     private MainWindow? _mainWindow;
@@ -105,6 +106,29 @@ public partial class App : Application
         _trayDictateItem = new WF.ToolStripMenuItem("Start hands-free dictation");
         _trayDictateItem.Click += (_, _) => ToggleDictation();
         menu.Items.Add(_trayDictateItem);
+
+        var flowBarItem = new WF.ToolStripMenuItem("Show Flow Bar")
+        {
+            CheckOnClick = true,
+            Checked = Services.Settings.Current.ShowFlowBar
+        };
+        flowBarItem.CheckedChanged += (_, _) =>
+        {
+            if (Services.Settings.Current.ShowFlowBar == flowBarItem.Checked) return;
+            Services.Settings.Current.ShowFlowBar = flowBarItem.Checked;
+            Services.Settings.Save();
+        };
+        menu.Items.Add(flowBarItem);
+        _trayFlowBarItem = flowBarItem;
+
+        // Keep the tick in sync when the setting changes elsewhere (the pill's
+        // ✕ button or the Settings dashboard).
+        Services.Settings.Changed += () =>
+        {
+            if (_trayFlowBarItem != null &&
+                _trayFlowBarItem.Checked != Services.Settings.Current.ShowFlowBar)
+                _trayFlowBarItem.Checked = Services.Settings.Current.ShowFlowBar;
+        };
 
         menu.Items.Add(new WF.ToolStripSeparator());
         menu.Items.Add("Quit BONGA", null, (_, _) => QuitApp());
