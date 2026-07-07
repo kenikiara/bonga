@@ -108,10 +108,10 @@ public sealed class DictationController : IDisposable
 
             string text = TextFormatter.Apply(raw, s);
 
-            if (s.AiPolish && !string.IsNullOrWhiteSpace(s.CloudApiKey) && text.Length > 0)
+            if (s.AiPolish && Polisher.HasKey(s) && text.Length > 0)
             {
-                try { text = await AiPolisher.PolishAsync(text, s); }
-                catch { /* polish is best-effort; keep local formatting */ }
+                try { text = await Polisher.PolishAsync(text, s); }
+                catch { /* cleanup is best-effort; keep local formatting */ }
             }
 
             if (string.IsNullOrWhiteSpace(text)) return;

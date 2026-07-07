@@ -60,12 +60,17 @@ public class AppSettings
     // Voice snippets: say the trigger phrase, get the expansion inserted
     public List<SnippetEntry> Snippets { get; set; } = new();
 
-    // Optional cloud engine + AI polish (any OpenAI-compatible endpoint)
+    // Optional cloud transcription engine (any OpenAI-compatible /audio/transcriptions endpoint)
     public string CloudApiBase { get; set; } = "https://api.openai.com/v1";
     public string CloudApiKey { get; set; } = "";
     public string CloudSttModel { get; set; } = "whisper-1";
+
+    // Optional AI cleanup: send the transcribed TEXT (never the audio) to an LLM to fix
+    // grammar/formatting. Provider: anthropic (Claude) | openrouter | openai.
     public bool AiPolish { get; set; } = false;
-    public string AiPolishModel { get; set; } = "gpt-4o-mini";
+    public string PolishProvider { get; set; } = "anthropic";
+    public string PolishApiKey { get; set; } = "";
+    public string AiPolishModel { get; set; } = "claude-haiku-4-5";
 }
 
 public class SettingsStore

@@ -291,6 +291,10 @@ public partial class MainWindow : Window
 
         InsertCombo.Items.Add(new ComboBoxItem { Content = "Paste (fast, recommended)", Tag = "paste" });
         InsertCombo.Items.Add(new ComboBoxItem { Content = "Type keystrokes (for terminals)", Tag = "type" });
+
+        PolishProviderCombo.Items.Add(new ComboBoxItem { Content = "Anthropic (Claude) — recommended", Tag = "anthropic" });
+        PolishProviderCombo.Items.Add(new ComboBoxItem { Content = "OpenRouter (one key, many models)", Tag = "openrouter" });
+        PolishProviderCombo.Items.Add(new ComboBoxItem { Content = "OpenAI", Tag = "openai" });
     }
 
     private void LoadSettingsToUi()
@@ -313,7 +317,10 @@ public partial class MainWindow : Window
         ApiKeyBox.Text = s.CloudApiKey;
         SttModelBox.Text = s.CloudSttModel;
         PolishCheck.IsChecked = s.AiPolish;
+        SelectByTag(PolishProviderCombo, s.PolishProvider);
+        PolishKeyBox.Text = s.PolishApiKey;
         PolishModelBox.Text = s.AiPolishModel;
+        UpdatePolishHint();
     }
 
     private void SaveSettings_Click(object sender, RoutedEventArgs e)
@@ -336,6 +343,8 @@ public partial class MainWindow : Window
         s.CloudApiKey = ApiKeyBox.Text.Trim();
         s.CloudSttModel = SttModelBox.Text.Trim();
         s.AiPolish = PolishCheck.IsChecked == true;
+        s.PolishProvider = GetTag(PolishProviderCombo, "anthropic");
+        s.PolishApiKey = PolishKeyBox.Text.Trim();
         s.AiPolishModel = PolishModelBox.Text.Trim();
 
         Services.Settings.Save();
@@ -348,6 +357,36 @@ public partial class MainWindow : Window
         var t = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
         t.Tick += (_, _) => { t.Stop(); SavedHint.Visibility = Visibility.Collapsed; };
         t.Start();
+    }
+
+    private void PolishProvider_Changed(object sender, SelectionChangedEventArgs e)
+    {
+        // The combo isn't populated until PopulateSettingsUi runs; ignore early ticks.
+        if (PolishModelBox == null) return;
+        string provider = GetTag(PolishProviderCombo, "anthropic");
+        string current = PolishModelBox.Text.Trim();
+        if (current.Length == 0 || Polisher.IsDefaultModel(current))
+            PolishModelBox.Text = Polisher.DefaultModel(provider);
+        UpdatePolishHint();
+    }
+
+    private void UpdatePolishHint()
+    {
+        string provider = GetTag(PolishProviderCombo, "anthropic");
+        PolishHint.Text = provider switch
+        {
+            "anthropic" => "Get a key at console.anthropic.com. Cheap & fast: claude-haiku-4-5.",
+            "openrouter" => "Get a key at openrouter.ai/keys. Any model works, e.g. anthropic/claude-3.5-haiku.",
+            _ => "Get a key at platform.openai.com. Cheap & fast: gpt-4o-mini.",
+        };
+    }
+
+    private void Quit_Click(object sender, RoutedEventArgs e)
+    {
+        if (MessageBox.Show(this,
+                "Quit BONGA completely? Voice dictation will stop working until you open it again.",
+                "BONGA", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            ((App)Application.Current).QuitApp();
     }
 
     private static void SelectByTag(ComboBox combo, string tag)

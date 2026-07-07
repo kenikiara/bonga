@@ -10,11 +10,16 @@
     <AssemblyName>Bonga</AssemblyName>
     <RootNamespace>VoiceFlow</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>1.1.0</Version>
+    <ApplicationIcon>Assets\bonga.ico</ApplicationIcon>
+    <Version>1.2.0</Version>
     <Authors>BONGA</Authors>
     <Product>BONGA</Product>
     <Description>System-wide AI voice dictation for Windows</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\bonga.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <!-- WinForms is only used for the tray icon; drop its global usings so WPF types win -->

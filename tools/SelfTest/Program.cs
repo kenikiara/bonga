@@ -36,6 +36,17 @@ Check("duplicate word collapse",
     TextFormatter.Apply("the the meeting is is at noon", fs),
     "The meeting is at noon.");
 
+Console.WriteLine("\n== Settings / AI cleanup provider ==");
+var defaults = new AppSettings();
+Check("default polish provider", defaults.PolishProvider, "anthropic");
+Check("default polish model", defaults.AiPolishModel, "claude-haiku-4-5");
+string settingsJson = System.Text.Json.JsonSerializer.Serialize(defaults);
+bool hasPolishFields = settingsJson.Contains("PolishProvider") &&
+                       settingsJson.Contains("PolishApiKey") &&
+                       settingsJson.Contains("AiPolishModel");
+Console.WriteLine($"  [{(hasPolishFields ? "PASS" : "FAIL")}] settings persist polish provider/key/model");
+if (!hasPolishFields) failures++;
+
 if (args.Length < 2)
 {
     Console.WriteLine("No model/wav supplied — skipping Whisper test.");

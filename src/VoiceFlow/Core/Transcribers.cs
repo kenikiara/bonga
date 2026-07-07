@@ -145,15 +145,48 @@ public static class CloudTranscriber
     private static string Truncate(string s, int len) => s.Length <= len ? s : s[..len] + "…";
 }
 
-/// <summary>Optional LLM pass that polishes the formatted text (OpenAI-compatible chat API).</summary>
-public static class AiPolisher
+/// <summary>
+/// Optional AI cleanup pass: sends the transcribed TEXT (never audio) to an LLM to fix
+/// grammar, punctuation and phrasing. Dispatches to the native Anthropic Messages API for
+/// Claude, or an OpenAI-compatible /chat/completions endpoint for OpenRouter and OpenAI.
+/// Best-effort: callers fall back to the locally formatted text if the request fails.
+/// </summary>
+public static class Polisher
 {
-    private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(60) };
-
-    private const string SystemPrompt =
+    internal const string SystemPrompt =
         "You clean up dictated speech. Fix grammar and phrasing lightly, remove any remaining " +
         "filler words, keep the speaker's meaning, tone and language. Do not add content, do not " +
         "answer questions in the text, do not translate. Return ONLY the cleaned text.";
+
+    /// <summary>Sensible default model per provider (used to prefill the Settings model box).</summary>
+    public static string DefaultModel(string provider) => provider switch
+    {
+        "openrouter" => "anthropic/claude-3.5-haiku",
+        "openai" => "gpt-4o-mini",
+        _ => "claude-haiku-4-5",
+    };
+
+    private static readonly HashSet<string> KnownDefaults = new(StringComparer.OrdinalIgnoreCase)
+        { "anthropic/claude-3.5-haiku", "gpt-4o-mini", "claude-haiku-4-5" };
+
+    /// <summary>True if the model box still holds a provider default (safe to auto-swap on provider change).</summary>
+    public static bool IsDefaultModel(string model) => KnownDefaults.Contains((model ?? "").Trim());
+
+    public static bool HasKey(AppSettings s) => !string.IsNullOrWhiteSpace(s.PolishApiKey);
+
+    public static Task<string> PolishAsync(string text, AppSettings s) =>
+        s.PolishProvider == "anthropic"
+            ? AnthropicPolisher.PolishAsync(text, s)
+            : OpenAiPolisher.PolishAsync(text, s);
+}
+
+/// <summary>OpenAI-compatible chat cleanup — covers OpenRouter and OpenAI.</summary>
+internal static class OpenAiPolisher
+{
+    private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(60) };
+
+    private static string BaseUrl(string provider) =>
+        provider == "openrouter" ? "https://openrouter.ai/api/v1" : "https://api.openai.com/v1";
 
     public static async Task<string> PolishAsync(string text, AppSettings s)
     {
@@ -163,20 +196,20 @@ public static class AiPolisher
             temperature = 0.2,
             messages = new object[]
             {
-                new { role = "system", content = SystemPrompt },
+                new { role = "system", content = Polisher.SystemPrompt },
                 new { role = "user", content = text }
             }
         };
 
-        using var req = new HttpRequestMessage(HttpMethod.Post,
-            s.CloudApiBase.TrimEnd('/') + "/chat/completions");
-        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", s.CloudApiKey);
+        using var req = new HttpRequestMessage(HttpMethod.Post, BaseUrl(s.PolishProvider) + "/chat/completions");
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", s.PolishApiKey);
+        req.Headers.TryAddWithoutValidation("X-Title", "BONGA");   // shows up in the OpenRouter dashboard
         req.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
 
         using var resp = await Http.SendAsync(req);
         string body = await resp.Content.ReadAsStringAsync();
         if (!resp.IsSuccessStatusCode)
-            throw new InvalidOperationException($"AI polish failed ({(int)resp.StatusCode})");
+            throw new InvalidOperationException($"AI cleanup failed ({(int)resp.StatusCode})");
 
         using var doc = JsonDocument.Parse(body);
         string? result = doc.RootElement
@@ -184,5 +217,54 @@ public static class AiPolisher
             .GetProperty("message")
             .GetProperty("content").GetString();
         return string.IsNullOrWhiteSpace(result) ? text : result.Trim();
+    }
+}
+
+/// <summary>Native Anthropic Messages API cleanup (Claude). Not OpenAI-compatible.</summary>
+internal static class AnthropicPolisher
+{
+    private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(60) };
+
+    public static async Task<string> PolishAsync(string text, AppSettings s)
+    {
+        var payload = new
+        {
+            model = s.AiPolishModel,
+            max_tokens = 1024,
+            system = Polisher.SystemPrompt,
+            messages = new object[] { new { role = "user", content = text } }
+        };
+
+        using var req = new HttpRequestMessage(HttpMethod.Post, "https://api.anthropic.com/v1/messages");
+        req.Headers.TryAddWithoutValidation("x-api-key", s.PolishApiKey);
+        req.Headers.TryAddWithoutValidation("anthropic-version", "2023-06-01");
+        req.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+
+        using var resp = await Http.SendAsync(req);
+        string body = await resp.Content.ReadAsStringAsync();
+        if (!resp.IsSuccessStatusCode)
+            throw new InvalidOperationException($"Claude cleanup failed ({(int)resp.StatusCode})");
+
+        using var doc = JsonDocument.Parse(body);
+        var root = doc.RootElement;
+
+        // Safety classifiers can decline (HTTP 200, stop_reason "refusal") — keep local text.
+        if (root.TryGetProperty("stop_reason", out var sr) && sr.GetString() == "refusal")
+            return text;
+
+        // content is an array of blocks; concatenate the text ones.
+        var sb = new StringBuilder();
+        if (root.TryGetProperty("content", out var content) && content.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var block in content.EnumerateArray())
+            {
+                if (block.TryGetProperty("type", out var bt) && bt.GetString() == "text" &&
+                    block.TryGetProperty("text", out var txt))
+                    sb.Append(txt.GetString());
+            }
+        }
+
+        string result = sb.ToString().Trim();
+        return result.Length == 0 ? text : result;
     }
 }

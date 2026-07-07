@@ -92,9 +92,9 @@ public partial class App : Application
 
     private void SetupTray()
     {
-        _iconIdle = MakeIcon(SD.Color.FromArgb(0x7C, 0x6C, 0xFF));
-        _iconRec = MakeIcon(SD.Color.FromArgb(0xFF, 0x54, 0x70));
-        _iconProc = MakeIcon(SD.Color.FromArgb(0xFF, 0xC2, 0x4B));
+        _iconIdle = MakeIcon(SD.Color.FromArgb(0x00, 0x6F, 0xFF));  // brand blue
+        _iconRec = MakeIcon(SD.Color.FromArgb(0xE8, 0x18, 0x2A));   // recording red
+        _iconProc = MakeIcon(SD.Color.FromArgb(0xFB, 0xBC, 0x00));  // transcribing gold
 
         var menu = new WF.ContextMenuStrip();
         var openItem = new WF.ToolStripMenuItem("Open BONGA");
@@ -159,7 +159,7 @@ public partial class App : Application
         _mainWindow.Activate();
     }
 
-    private void QuitApp()
+    internal void QuitApp()
     {
         IsExiting = true;
         if (_tray != null)
@@ -180,22 +180,41 @@ public partial class App : Application
         base.OnExit(e);
     }
 
-    /// <summary>Draws the mic tray icon at runtime (no bundled assets needed).</summary>
+    /// <summary>
+    /// Draws the tray badge at runtime: a rounded square in the state colour with a white
+    /// microphone. Colour signals status (blue idle / red recording / gold transcribing).
+    /// </summary>
     private static SD.Icon MakeIcon(SD.Color color)
     {
         using var bmp = new SD.Bitmap(32, 32);
         using (var g = SD.Graphics.FromImage(bmp))
         {
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            using var b = new SD.SolidBrush(color);
-            using var p = new SD.Pen(color, 3);
-            g.FillEllipse(b, 11, 2, 10, 10);      // mic capsule top
-            g.FillRectangle(b, 11, 7, 10, 9);     // capsule body
-            g.FillEllipse(b, 11, 12, 10, 8);      // capsule bottom
-            g.DrawArc(p, 7, 8, 18, 16, 20, 140);  // cradle
-            g.DrawLine(p, 16, 24, 16, 28);        // stem
-            g.DrawLine(p, 11, 29, 21, 29);        // base
+
+            using (var bg = new SD.SolidBrush(color))
+            using (var path = RoundRect(1, 1, 30, 30, 7))
+                g.FillPath(bg, path);
+
+            using var w = new SD.SolidBrush(SD.Color.White);
+            using var pen = new SD.Pen(SD.Color.White, 2.4f);
+            using (var cap = RoundRect(12, 6, 8, 12, 4))
+                g.FillPath(w, cap);                 // mic capsule
+            g.DrawArc(pen, 9, 12, 14, 13, 20, 140); // cradle
+            g.DrawLine(pen, 16, 24, 16, 27);        // stem
+            g.DrawLine(pen, 12, 28, 20, 28);        // base
         }
         return SD.Icon.FromHandle(bmp.GetHicon());
+    }
+
+    private static System.Drawing.Drawing2D.GraphicsPath RoundRect(float x, float y, float w, float h, float r)
+    {
+        var p = new System.Drawing.Drawing2D.GraphicsPath();
+        float d = r * 2;
+        p.AddArc(x, y, d, d, 180, 90);
+        p.AddArc(x + w - d, y, d, d, 270, 90);
+        p.AddArc(x + w - d, y + h - d, d, d, 0, 90);
+        p.AddArc(x, y + h - d, d, d, 90, 90);
+        p.CloseFigure();
+        return p;
     }
 }
